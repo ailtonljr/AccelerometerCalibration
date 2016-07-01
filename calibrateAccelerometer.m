@@ -15,7 +15,7 @@ function [ o, s, r ] = calibrateAccelerometer( accX, accY, accZ )
 % Return 
 %    o - the offset for each axis (1x3 vector)
 %    s - the sensitivity for each axis (1x3 vector)
-%    r - the rail of the first sphere. Could be used to determine if need
+%    r - the radius of the first sphere. Could be used to determine if need
 %    extra samples.
 %
 % The calibration parameters should be used as:
