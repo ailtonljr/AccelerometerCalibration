@@ -10,7 +10,7 @@ function [ o, s, r ] = calibrateAccelerometer( accX, accY, accZ )
 %
 % Parameters
 %    accX, accY, accZ - vector containing the accelerometers samples for
-%    each axis.
+%    each axis (1xn vector).
 %
 % Return 
 %    o - the offset for each axis (1x3 vector)
@@ -22,17 +22,20 @@ function [ o, s, r ] = calibrateAccelerometer( accX, accY, accZ )
 %   accCalibrated = (accMeasured - o) / s
 % 
 
-%Filter test
-% [b,a] = butter(2, 2/40);
+%     Copyright 2016 Ailton Luiz Dias Siqueira Junior.
+%
+%     This program is free software: you can redistribute it and/or modify
+%     it under the terms of the GNU General Public License as published by
+%     the Free Software Foundation, either version 3 of the License, or
+%     (at your option) any later version.
 % 
-% accX = filtfilt(b,a,double(accX));
-% accY = filtfilt(b,a,double(accY));
-% accZ = filtfilt(b,a,double(accZ));
-
-% Return to original byte scale
-% accX = double(accX) / (2/512);
-% accY = double(accY) / (2/512);
-% accZ = double(accZ) / (2/512);
+%     This program is distributed in the hope that it will be useful,
+%     but WITHOUT ANY WARRANTY; without even the implied warranty of
+%     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%     GNU General Public License for more details.
+% 
+%     You should have received a copy of the GNU General Public License
+%     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 %Implementing equation 11
 firstRow = ones(size(accX));
@@ -68,8 +71,6 @@ Bsystem2 = [sum(accX); sum(accY); sum(accZ)]';
 resp2 = mldivide(Asystem2, Bsystem2');
 
 s = 1./sqrt(resp2);
-
-
 
 end
 

@@ -1,0 +1,242 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Example of accelerometer calibration and test with data</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-07-19"><meta name="DC.source" content="calibrationExample.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Example of accelerometer calibration and test with data</h1><!--introduction--><p>This shows an example of accelerometer calibration using the method described by Gietzelt, M., Wolf, K. H., Marschollek, M., &amp; Haux, R. (2013). Performance comparison of accelerometer calibration algorithms based on 3D-ellipsoid fitting methods. Computer Methods and Programs in Biomedicine, 111(1), 62-71. <a href="http://doi.org/10.1016/j.cmpb.2013.03.006">http://doi.org/10.1016/j.cmpb.2013.03.006</a></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Loading and view the calibration data</a></li><li><a href="#2">Calculate the accelerometer calibration parameters</a></li><li><a href="#3">Loading a test accelerometer signal</a></li><li><a href="#4">Calculate the norm of the acceleration before the calibration</a></li><li><a href="#5">Applying the calibration factors</a></li><li><a href="#6">Calculate the norm after the calibration</a></li><li><a href="#7">Copyright 2016 Ailton Luiz Dias Siqueira Junior.</a></li></ul></div><h2>Loading and view the calibration data<a name="1"></a></h2><pre class="codeinput"><span class="comment">%Load the calibration data. This was recorded making slow movements in the</span>
+<span class="comment">%accelerometer in such way the gravity vector forms a sphere.</span>
+
+load <span class="string">calib_acc_01.mat</span>
+
+accXcalib = double(Respiratory_Sensor_Port_COM3_Canal_0_g_Amplitude);
+accYcalib = double(Respiratory_Sensor_Port_COM3_Canal_1_g_Amplitude);
+accZcalib = double(Respiratory_Sensor_Port_COM3_Canal_2_g_Amplitude);
+
+<span class="comment">%Plot the data so you can see the movement made.</span>
+
+plot3(accXcalib, accYcalib, accZcalib);
+</pre><img vspace="5" hspace="5" src="calibrationExample_01.png" alt=""> <h2>Calculate the accelerometer calibration parameters<a name="2"></a></h2><pre class="codeinput">[ offset, scale, radius ] = calibrateAccelerometer(accXcalib, accYcalib, accZcalib)
+</pre><pre class="codeoutput">
+offset =
+
+    0.0593
+    0.0744
+    0.0280
+
+
+scale =
+
+    1.0211
+    1.0291
+    0.9866
+
+
+radius =
+
+    1.0094
+
+</pre><h2>Loading a test accelerometer signal<a name="3"></a></h2><pre class="codeinput"><span class="comment">%Load the test signal. This signal contains the accelerometer fixed in 12</span>
+<span class="comment">%different positions.</span>
+
+<span class="comment">%Concatenate the data</span>
+accX = [];
+accY = [];
+accZ = [];
+
+<span class="keyword">for</span> n=1:12
+
+    load([<span class="string">'fix_acc_01_'</span> num2str(n) <span class="string">'.mat'</span>])
+
+    eval([<span class="string">'accX = [accX Respiratory_Sensor_Port_COM3_Canal_0_g_Amplitude];'</span>]);
+    eval([<span class="string">'accY = [accY Respiratory_Sensor_Port_COM3_Canal_1_g_Amplitude];'</span>]);
+    eval([<span class="string">'accZ = [accZ Respiratory_Sensor_Port_COM3_Canal_2_g_Amplitude];'</span>]);
+
+<span class="keyword">end</span>
+
+<span class="comment">%Plot the data so you can see the test points on the sphere.</span>
+
+plot3(accX, accY, accZ, <span class="string">'x'</span>);
+</pre><img vspace="5" hspace="5" src="calibrationExample_02.png" alt=""> <h2>Calculate the norm of the acceleration before the calibration<a name="4"></a></h2><pre class="codeinput"><span class="comment">%Norm of the acceleration before the calibration</span>
+modBeforeCalibration = sqrt(accX.^2 + accY.^2 + accZ.^2);
+
+<span class="comment">%The histogram of the norm before the calibration.</span>
+hist(modBeforeCalibration,20);
+title([<span class="string">'Before calibration'</span>]);
+xlim([0.8 1.2]);
+</pre><img vspace="5" hspace="5" src="calibrationExample_03.png" alt=""> <h2>Applying the calibration factors<a name="5"></a></h2><pre class="codeinput"><span class="comment">%Apply the calibration factors</span>
+[ calibAccX, calibAccY, calibAccZ ] = applyCalibrationFactor( accX, accY, accZ, offset, scale );
+</pre><h2>Calculate the norm after the calibration<a name="6"></a></h2><pre class="codeinput">modAfterCalibration = sqrt(calibAccX.^2 + calibAccY.^2 + calibAccZ.^2);
+
+<span class="comment">%Comparing the histogram before and after the calibration.</span>
+subplot(2, 1, 1);
+hist(modBeforeCalibration,20);
+title([<span class="string">'Before calibration'</span>]);
+xlim([0.8 1.2]);
+xlabel(<span class="string">'Acceleration (g)'</span>);
+subplot(2, 1, 2);
+hist(modAfterCalibration,20);
+title(<span class="string">'After calibration'</span>);
+xlim([0.8 1.2]);
+xlabel(<span class="string">'Acceleration (g)'</span>);
+</pre><img vspace="5" hspace="5" src="calibrationExample_04.png" alt=""> <h2>Copyright 2016 Ailton Luiz Dias Siqueira Junior.<a name="7"></a></h2><p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p><p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p><p>You should have received a copy of the GNU General Public License along with this program.  If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Example of accelerometer calibration and test with data
+% This shows an example of accelerometer calibration using the method
+% described by Gietzelt, M., Wolf, K. H., Marschollek, M., & Haux, R. (2013). 
+% Performance comparison of accelerometer calibration algorithms based 
+% on 3D-ellipsoid fitting methods. Computer Methods and Programs in 
+% Biomedicine, 111(1), 62-71. http://doi.org/10.1016/j.cmpb.2013.03.006
+
+%% Loading and view the calibration data
+%Load the calibration data. This was recorded making slow movements in the
+%accelerometer in such way the gravity vector forms a sphere.
+
+load calib_acc_01.mat
+
+accXcalib = double(Respiratory_Sensor_Port_COM3_Canal_0_g_Amplitude);
+accYcalib = double(Respiratory_Sensor_Port_COM3_Canal_1_g_Amplitude);
+accZcalib = double(Respiratory_Sensor_Port_COM3_Canal_2_g_Amplitude);
+
+%Plot the data so you can see the movement made.
+
+plot3(accXcalib, accYcalib, accZcalib);
+
+%% Calculate the accelerometer calibration parameters
+
+[ offset, scale, radius ] = calibrateAccelerometer(accXcalib, accYcalib, accZcalib)
+
+
+%% Loading a test accelerometer signal
+
+%Load the test signal. This signal contains the accelerometer fixed in 12
+%different positions.
+
+%Concatenate the data
+accX = [];
+accY = [];
+accZ = [];
+
+for n=1:12
+
+    load(['fix_acc_01_' num2str(n) '.mat'])
+
+    eval(['accX = [accX Respiratory_Sensor_Port_COM3_Canal_0_g_Amplitude];']);
+    eval(['accY = [accY Respiratory_Sensor_Port_COM3_Canal_1_g_Amplitude];']);
+    eval(['accZ = [accZ Respiratory_Sensor_Port_COM3_Canal_2_g_Amplitude];']);
+
+end
+
+%Plot the data so you can see the test points on the sphere.
+
+plot3(accX, accY, accZ, 'x');
+
+%% Calculate the norm of the acceleration before the calibration
+
+%Norm of the acceleration before the calibration
+modBeforeCalibration = sqrt(accX.^2 + accY.^2 + accZ.^2);
+
+%The histogram of the norm before the calibration.
+hist(modBeforeCalibration,20);
+title(['Before calibration']);
+xlim([0.8 1.2]);
+
+%% Applying the calibration factors
+
+%Apply the calibration factors
+[ calibAccX, calibAccY, calibAccZ ] = applyCalibrationFactor( accX, accY, accZ, offset, scale );
+
+
+%% Calculate the norm after the calibration
+modAfterCalibration = sqrt(calibAccX.^2 + calibAccY.^2 + calibAccZ.^2);
+
+%Comparing the histogram before and after the calibration.
+subplot(2, 1, 1);
+hist(modBeforeCalibration,20);
+title(['Before calibration']);
+xlim([0.8 1.2]);
+xlabel('Acceleration (g)');
+subplot(2, 1, 2);
+hist(modAfterCalibration,20);
+title('After calibration');
+xlim([0.8 1.2]);
+xlabel('Acceleration (g)');
+
+%% Copyright 2016 Ailton Luiz Dias Siqueira Junior.
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+% 
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+% 
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##### SOURCE END #####
+--></body></html>
