@@ -1,8 +1,7 @@
 # Matlab Accelerometer calibration functions
 
 Matlab functions to calculate the accelerometers calibration parameters from
-tilt data using the method described in using the method
-described by Gietzelt, M., Wolf, K. H., Marschollek, M., & Haux, R. (2013).
+tilt data using the method described in Gietzelt, M., Wolf, K. H., Marschollek, M., & Haux, R. (2013).
 Performance comparison of accelerometer calibration algorithms based
 on 3D-ellipsoid fitting methods. Computer Methods and Programs in
 Biomedicine, 111(1), 62-71. http://doi.org/10.1016/j.cmpb.2013.03.006
@@ -10,7 +9,7 @@ Biomedicine, 111(1), 62-71. http://doi.org/10.1016/j.cmpb.2013.03.006
 
 ## Example of accelerometer calibration and test with data
 
-This shows an example of accelerometer calibration using the method described by Gietzelt, M., Wolf, K. H., Marschollek, M., & Haux, R. (2013). Performance comparison of accelerometer calibration algorithms based on 3D-ellipsoid fitting methods. Computer Methods and Programs in Biomedicine, 111(1), 62-71. http://doi.org/10.1016/j.cmpb.2013.03.006
+This shows an example of accelerometer calibration.
 
 
 ## Loading and view the calibration data
